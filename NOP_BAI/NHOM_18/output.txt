@@ -1,0 +1,8 @@
+TTPT | TTKE                                   | danhSachL
+A    | B, C, D                                | B, C, D  
+D    | C, F                                   | B, C, F  
+F    | K                                      | B, C, K  
+K    |                                        | B, C     
+C    | E, F                                   | B, E     
+E    | G, K                                   | B, G     
+G    | TTKT-Dung duong di la A -> C -> E -> G |          

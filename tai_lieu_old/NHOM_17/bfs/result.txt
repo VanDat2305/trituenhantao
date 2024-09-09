@@ -1,0 +1,6 @@
+TT	|KE	|LList
+A	|B,C,D	|B,C,D
+B	|G,I	|C,D,G,I
+C	|E,F	|D,G,I,E,F
+D	|C,F	|G,I,E,F
+G	|TTKT-Dung duong di la G<--D<--C<--B<--A 	|

@@ -1,0 +1,17 @@
+# Đỉnh và các cạnh
+A B
+A C
+A D
+B I
+B G
+C E
+C F
+D C
+D F
+E G
+E K
+F K
+
+# Đỉnh bắt đầu và kết thúc
+START A
+FINISH G
