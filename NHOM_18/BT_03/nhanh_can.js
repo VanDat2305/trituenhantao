@@ -1,5 +1,6 @@
 const fs = require('fs');
 const lines = fs.readFileSync('input.txt', 'utf8').replace(/\r/g, ' ').split('\n');
+
 let [start, end] = lines[0].split(' ');
 const edges = lines.slice(1).map((line) => {
     const [a, b, C] = line.split(' ');
@@ -47,19 +48,30 @@ while (L.length > 0) {
         
         result.push({
             'TT': u,
-            'KE': `Đã tìm được đích với tổng chi phí là ${cost}.`,
+            'KE': `TTKT- Dung duong tong la `,
             'k(u,v)': '',
             'h(v)': '',
             'g(v)': '',
             'f(v)': '',
-            'LList1': LList1.join(","),
+            'LList1': LList1.sort((a, b) => parseInt(a.substring(1)) - parseInt(b.substring(1))).join(","),
             'LList': LList.join(",")
         });
         
-        // Thêm dòng cuối với thông tin yêu cầu
-        result.push({
-            'TT': end.substring(0, 1),
-            'KE': `TTKT-Dung duong tong la ${path} tổng là ${cost}`,
+        // // Thêm dòng cuối với thông tin yêu cầu
+        // result.push({
+        //     'TT': '',// end.substring(0, 1)
+        //     'KE': ``,
+        //     'k(u,v)': '',
+        //     'h(v)': '',
+        //     'g(v)': '',
+        //     'f(v)': '',
+        //     'LList1': '',
+        //     'LList': ''
+        // });
+         // Thêm dòng cuối với thông tin yêu cầu
+         result.push({
+            'TT': '',// end.substring(0, 1)
+            'KE': `${path} tổng chi phí là ${cost}`,
             'k(u,v)': '',
             'h(v)': '',
             'g(v)': '',
@@ -115,7 +127,7 @@ while (L.length > 0) {
 
 // Hiển thị kết quả dưới dạng bảng
 const tableFormat = [
-    { name: 'TT', alignment: 'center', width: 10 },
+    { name: 'TT', alignment: 'center', width: 5 },
     { name: 'KE', alignment: 'center', width: 50 },
     { name: 'k(u,v)', alignment: 'center', width: 15 },
     { name: 'h(v)', alignment: 'center', width: 15 },

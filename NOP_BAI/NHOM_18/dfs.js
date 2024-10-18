@@ -31,8 +31,8 @@ function docDoThiTuFile(filename) {
   return { doThi, batDau, ketThuc };
 }
 
-// Hàm BFS để tìm đường đi từ start đến finish
-function bfs(doThi, batDau, ketThuc) {
+// Hàm dfs để tìm đường đi từ start đến finish
+function dfs(doThi, batDau, ketThuc) {
   let L = [batDau];
   let visited = new Set();
   let parent = {};

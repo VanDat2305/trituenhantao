@@ -109,6 +109,8 @@ function ghiKetQuaRaFile(filename, result, duongDi) {
   noiDung.push("------------------------------------------------------------------");
 
   result.forEach(row => {
+    console.log(row.TT.toString());
+    
     noiDung.push(`${row.TT.toString().padEnd(3)}| ${row.TTPT.padEnd(7)}| ${row.TTKE.padEnd(28)}| ${row.L1.padEnd(18)}| ${row.L}`);
   });
 
@@ -123,6 +125,7 @@ function ghiKetQuaRaFile(filename, result, duongDi) {
 // Chạy chương trình với file input
 const tenFileInput = 'input.txt';
 const tenFileOutput = 'output.txt';
+
 const { doThi, batDau, ketThuc } = docDoThiTuFile(tenFileInput);
 const { result, duongDi } = hillClimbing(doThi, batDau, ketThuc);
 

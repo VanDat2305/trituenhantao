@@ -32,8 +32,8 @@ function docDoThiTuFile(filename) {
   return { doThi, batDau, ketThuc };
 }
 
-// Hàm BFS để tìm đường đi từ start đến finish
-function bfs(doThi, batDau, ketThuc) {
+// Hàm dfs để tìm đường đi từ start đến finish
+function dfs(doThi, batDau, ketThuc) {
   let L = [batDau]; // Danh sách lưu các trạng thái cần khám phá
   let visited = new Set(); // Tập các đỉnh đã được duyệt
   let parent = {}; // Để lưu lại các bước trước đó
@@ -52,7 +52,8 @@ function bfs(doThi, batDau, ketThuc) {
       result.push({
         TTPT: u,
         TTKE: `TTKT-Dung duong di la ${path.join(' -> ')}`, // Đường đi từ đỉnh bắt đầu đến đỉnh kết thúc
-        danhSachL: '' // Danh sách các đỉnh còn lại trong L
+        danhSachL: '', // Danh sách các đỉnh còn lại trong L
+        dinhDaDuyet: ''
       });
       break;
     }
@@ -66,7 +67,8 @@ function bfs(doThi, batDau, ketThuc) {
     result.push({
       TTPT: u,
       TTKE: nextStates.sort().join(', '), // Các đỉnh kề
-      danhSachL: danhSachL.join(', ') // Danh sách các đỉnh còn lại trong L
+      danhSachL: danhSachL.join(', '), // Danh sách các đỉnh còn lại trong L
+      dinhDaDuyet:  Array.from(visited).join(', ')
     });
     
 
@@ -84,7 +86,8 @@ function bfs(doThi, batDau, ketThuc) {
     result.push({
       TTPT: batDau,
       TTKE: `TTKT-Khong tim thay duong di tu ${batDau} den ${ketThuc}`,
-      danhSachL: danhSachL.join(', ')
+      danhSachL: danhSachL.join(', '),
+      dinhDaDuyet: ''
     });
   }
 
@@ -104,13 +107,14 @@ function buildPath(parent, start, goal) {
 // Chạy chương trình với file input
 const tenFile = 'input.txt';
 const { doThi, batDau, ketThuc } = docDoThiTuFile(tenFile);
-const result = bfs(doThi, batDau, ketThuc);
+const result = dfs(doThi, batDau, ketThuc);
 
 // Định dạng bảng kết quả
 const tableFormat = [
   { name: 'TTPT', alignment: 'left' },
   { name: 'TTKE', alignment: 'left' },
   { name: 'danhSachL', alignment: 'left' },
+  { name: 'dinhDaDuyet', alignment: 'left' },
 ];
 
 // Tạo tiêu đề bảng
