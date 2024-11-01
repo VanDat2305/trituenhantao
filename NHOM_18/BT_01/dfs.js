@@ -69,7 +69,7 @@ function dfs(doThi, batDau, ketThuc) {
     result.push({
       TTPT: u,
       TTKE: nextStates.sort().join(', '), // Các đỉnh kề
-      danhSachL: danhSachL.join(', '), // Danh sách các đỉnh còn lại trong L
+      danhSachL: danhSachL.reverse().join(', '), // Danh sách các đỉnh còn lại trong L
       danhSachQ:  [...new Set([...Array.from(visited), ...danhSachL])].join(', ')
     });
     
