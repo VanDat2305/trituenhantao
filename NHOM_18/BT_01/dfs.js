@@ -114,7 +114,6 @@ const tableFormat = [
   { name: 'TTPT', alignment: 'left' },
   { name: 'TTKE', alignment: 'left' },
   { name: 'danhSachL', alignment: 'left' },
-  { name: 'dinhDaDuyet', alignment: 'left' },
 ];
 
 // Tạo tiêu đề bảng
