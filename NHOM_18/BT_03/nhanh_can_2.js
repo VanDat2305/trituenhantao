@@ -27,7 +27,7 @@ function readFile(inputFile) {
         }
     
         // Trả về mảng chứa đỉnh bắt đầu, đỉnh kết thúc và trọng số
-        return [a.substring(0, 1), b, parseFloat(C)]; // Ép trọng số thành kiểu số
+        return [a.charAt(0), b, parseFloat(C)]; // Ép trọng số thành kiểu số
     }).filter(edge => edge !== null); // Loại bỏ các dòng không hợp lệ
     
     return { start, end, edges }; // Trả về đối tượng chứa start, end, và các cạnh edges
@@ -47,95 +47,62 @@ function createDirectedGraph(edges) {
 function processGraph(start, end, edges) {
     let graph = createDirectedGraph(edges); // Tạo đồ thị từ danh sách các cạnh
     let result = []; // Lưu trữ kết quả cuối cùng
-    let Q = []; // Hàng đợi các trạng thái cần duyệt
-    let L = []; // Danh sách các đỉnh tạm thời được chọn để xử lý
-    let currentPath = []; // Lưu trữ đường đi hiện tại
+    let LList = [start]; // Danh sách các đỉnh tạm thời để xử lý
     let minRoad = 0; // Biến lưu chi phí nhỏ nhất đến thời điểm hiện tại
-    let cost = Infinity; // Khởi tạo biến lưu chi phí với giá trị vô cùng lớn
-    let visited = new Set(); // Tập hợp các đỉnh đã thăm
-    let gValues = {}; // Đối tượng lưu trữ giá trị g cho mỗi đỉnh
+    let gValues = { [start]: 0 }; // Khởi tạo giá trị g cho đỉnh bắt đầu
     let gU = 0; // Khởi tạo gU
 
-    Q.push(start); // Đưa điểm bắt đầu vào hàng đợi
-    L.push(start); // Đưa điểm bắt đầu vào danh sách L
-
-    while (L.length > 0) {
-        let LList = [];
+    while (LList.length > 0) {
         let LList1 = [];
-        currentPath.push(L[0]?.split(',').map(point => point.substring(0, 1))); // Lưu trạng thái hiện tại vào đường đi
+        let u = LList.shift().charAt(0); // Lấy đỉnh đầu tiên trong L để xử lý
 
-        let u = L.shift().substring(0, 1); // Lấy đỉnh đầu tiên trong L để xử lý
-        LList.push(L);
-        if (visited.has(u)) continue; // Nếu đỉnh đã thăm rồi thì bỏ qua
-        visited.add(u); // Đánh dấu đỉnh này đã được thăm
-        
-        if (u === end.substring(0, 1)) {
-            cost = minRoad; // Cập nhật chi phí nhỏ nhất
-            let path = currentPath.reverse().join("<-"); // Tạo đường đi ngược lại từ kết thúc về bắt đầu
-
-            result.push({
-                'TT': u,
-                'KE': `TTKT- Dung duong tong la `,
-                'k(u,v)': '',
-                'h(v)': '',
-                'g(v)': '',
-                'f(v)': '',
-                'LList1': LList1.join(","),
-                'LList': LList.join(",")
-            });
-
-            result.push({
-                'TT': '',
-                'KE': `${path} tổng chi phí là ${cost}`, // Thêm thông tin chi phí tổng cộng
-                'k(u,v)': '',
-                'h(v)': '',
-                'g(v)': '',
-                'f(v)': '',
-                'LList1': '',
-                'LList': ''
-            });
-            break; // Thoát vòng lặp sau khi tìm được đường đi ngắn nhất
+        if (u === end.charAt(0)) {
+            result.push(
+                { 
+                    'TT': u,
+                    'KE': `TTKT, tìm được đường đi tạm thời đội dài ${minRoad}`,
+                    'LList1': LList1.join(","),
+                    'LList': LList.join(",")
+                },
+ 
+            );
+            var x = false;
+            if (LList.some(item => parseInt(item.slice(1)) < minRoad)) {
+                continue; // Nếu có ít nhất một phần tử thỏa mãn, tiếp tục vòng lặp
+            } else {
+                break; // Nếu không có phần tử nào thỏa mãn, thoát khỏi vòng lặp
+            }
+            
         }
 
-        let nextStates = [];
-        let K = [], H = [], G = [], F = [];
-
+        let nextStates = [], K = [], H = [], G = [], F = [];
+        
+        console.log(u, graph[u]);
+        
         if (graph[u]) {
             for (let [v, k] of graph[u]) {
-                let h = parseInt(v.substring(1)); // Tính hàm heuristic h(v)
+                let vKey = v.charAt(0); // Lấy ký tự đầu của v
+                let h = parseInt(v.slice(1)); // Tính heuristic h(v)
                 let g = (gValues[u] || 0) + parseInt(k); // Tính g(v) = g(u) + k(u, v)
                 let f = g + h; // Tính f(v) = g(v) + h(v)
 
                 // Nếu g nhỏ hơn giá trị đã lưu cho v, cập nhật
-                if (!gValues[v.substring(0, 1)] || g < gValues[v.substring(0, 1)]) {
-                    gValues[v.substring(0, 1)] = g; // Cập nhật g cho đỉnh v
-
-                    // Cập nhật gU nếu g nhỏ hơn gU
-                    if (gU === 0 || g < gU) {
-                        gU = g; // Cập nhật gU
-                    }
-
-                    nextStates.push(v.substring(0, 1)); // Thêm v vào danh sách các trạng thái tiếp theo
-                    LList1.push(`${v.substring(0, 1)}${f}`); // Thêm v và f(v) vào LList1
-                    K.push(k); // Lưu trọng số k(u, v)
-                    H.push(h); // Lưu h(v)
-                    G.push(g); // Lưu g(v)
-                    F.push(f); // Lưu f(v)
-
-                    L.push(`${v.substring(0, 1)}${f}`); // Thêm v vào danh sách L với f(v)
+                if (!gValues[vKey] || g < gValues[vKey]) {
+                    gValues[vKey] = g; // Cập nhật g cho đỉnh v
+                    if (gU === 0 || g < gU) gU = g; // Cập nhật gU nếu g nhỏ hơn
                 }
+                nextStates.push(vKey); 
+                LList1.push(`${vKey}${f}`); // Thêm v và f(v) vào LList1
+                K.push(k); H.push(h); G.push(g); F.push(f);
             }
         }
 
-        // Sắp xếp danh sách L theo giá trị f(v) tăng dần
-        L.sort((a, b) => parseInt(a.substring(1)) - parseInt(b.substring(1)));
-        LList1.sort((a, b) => parseInt(a.substring(1)) - parseInt(b.substring(1)));
-        
-        
-        // Cập nhật giá trị minRoad (chi phí nhỏ nhất đến thời điểm hiện tại)
-        if (L.length > 0) {
-            minRoad = parseInt(L[0]?.substring(1));
-        }
+        // Sắp xếp `LList1` theo `f(v)` và thêm vào đầu `L`
+        LList1.sort((a, b) => parseInt(a.slice(1)) - parseInt(b.slice(1)));
+        LList.unshift(...LList1);
+
+        // Cập nhật minRoad
+        if (LList.length > 0) minRoad = parseInt(LList[0].slice(1));
 
         // Lưu thông tin của đỉnh hiện tại vào kết quả
         result.push({
@@ -144,22 +111,23 @@ function processGraph(start, end, edges) {
             'k(u,v)': K.join(","), 
             'h(v)': H.join(","),
             'g(v)': G.join(","),
-            'f(v)': F.join(","), 
+            'f(v)': F.join(","),
             'LList1': LList1.join(","),
-            'LList': LList.join(",") 
+            'LList': LList.join(",")
         });
     }
 
-    return result; // Trả về danh sách kết quả
+    return result;
 }
+
 
 
 // Hàm ghi kết quả ra tệp tin
 function writeFile(outputFile, result) {
-    // Định dạng bảng kết quả
+    
     const tableFormat = [
-        { name: 'TT', alignment: 'center', width: 5 },
-        { name: 'KE', alignment: 'center', width: 50 },
+        { name: 'TT', alignment: 'center', width: 3 },
+        { name: 'KE', alignment: 'center', width: 55 },
         { name: 'k(u,v)', alignment: 'center', width: 15 },
         { name: 'h(v)', alignment: 'center', width: 15 },
         { name: 'g(v)', alignment: 'center', width: 15 },
@@ -180,9 +148,11 @@ function writeFile(outputFile, result) {
 
     const green = "\x1b[32m";
     const reset = "\x1b[0m";
-    console.log(`${green}Bảng kết quả đã được ghi vào file`, outputFile , `${reset}`); // Thông báo khi hoàn thành
+    console.log(`${green}Bảng kết quả đã được ghi vào file`, outputFile , `${reset}`);
 }
 
-const { start, end, edges } = readFile('input2.txt'); // Đọc tệp đầu vào
-const result = processGraph(start, end, edges); // Xử lý đồ thị và tìm đường đi
-writeFile('output.txt', result); // Ghi kết quả ra tệp đầu ra
+
+
+const { start, end, edges } = readFile('input2.txt');
+const result = processGraph(start, end, edges);
+writeFile('output.txt', result); 

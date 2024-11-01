@@ -1,0 +1,111 @@
+function processGraph(start, end, edges) {
+    let graph = createDirectedGraph(edges); // Tạo đồ thị từ danh sách các cạnh
+    let result = []; // Lưu trữ kết quả cuối cùng
+    let L = []; // Danh sách các đỉnh tạm thời được chọn để xử lý
+    let currentPath = []; // Lưu trữ đường đi hiện tại
+    let minRoad = 0; // Biến lưu chi phí nhỏ nhất đến thời điểm hiện tại
+    let gValues = {}; // Đối tượng lưu trữ giá trị g cho mỗi đỉnh
+    let gU = 0; // Khởi tạo gU
+
+    L.push(start); // Đưa điểm bắt đầu vào danh sách L
+
+    while (L.length > 0) {
+        let LList1 = [];
+        currentPath.push(L[0]?.split(',')); // Lưu trạng thái hiện tại vào đường đi
+
+        let u = L.shift().substring(0, 1); // Lấy đỉnh đầu tiên trong L để xử lý
+        
+        if (u === end.substring(0, 1)) {
+            let path = currentPath.reverse().join("<-"); // Tạo đường đi ngược lại từ kết thúc về bắt đầu
+
+            result.push({
+                'TT': u,
+                'KE': TTKT- Dung duong tong la ,
+                'k(u,v)': '',
+                'h(v)': '',
+                'g(v)': '',
+                'f(v)': '',
+                'LList1': LList1.join(","),
+                'LList': L.join(",")
+            });
+
+            result.push({
+                'TT': '',
+                'KE': ${path} tổng chi phí là ${minRoad}, // Thêm thông tin chi phí tổng cộng
+                'k(u,v)': '',
+                'h(v)': '',
+                'g(v)': '',
+                'f(v)': '',
+                'LList1': '',
+                'LList': ''
+            });
+            continue;
+            // break; // Thoát vòng lặp sau khi tìm được đường đi ngắn nhất
+        }
+
+        let nextStates = [];
+        let K = [], H = [], G = [], F = [];
+
+        if (graph[u]) {
+            for (let [v, k] of graph[u]) {
+                console.log(v, k);
+                
+                let h = parseInt(v.substring(1)); // Tính hàm heuristic h(v)
+                let g = (gValues[u] || 0) + parseInt(k); // Tính g(v) = g(u) + k(u, v)
+                let f = g + h; // Tính f(v) = g(v) + h(v)
+
+                // Nếu g nhỏ hơn giá trị đã lưu cho v, cập nhật
+                if (!gValues[v.substring(0, 1)] || g < gValues[v.substring(0, 1)]) {
+                    gValues[v.substring(0, 1)] = g; // Cập nhật g cho đỉnh v
+
+                    // Cập nhật gU nếu g nhỏ hơn gU
+                    if (gU === 0 || g < gU) {
+                        gU = g; // Cập nhật gU
+                    }
+                    nextStates.push(v.substring(0, 1)); // Thêm v vào danh sách các trạng thái tiếp theo
+                    LList1.push(${v.substring(0, 1)}${f}); // Thêm v và f(v) vào LList1
+                    K.push(k); // Lưu trọng số k(u, v)
+                    H.push(h); // Lưu h(v)
+                    G.push(g); // Lưu g(v)
+                    F.push(f); // Lưu f(v)
+
+                }
+            }
+        }
+        
+
+        // Sắp xếp danh sách L theo giá trị f(v) tăng dần
+        LList1.sort((a, b) => parseInt(a.substring(1)) - parseInt(b.substring(1)));
+        
+        L.unshift(...LList1);
+        
+        // Cập nhật giá trị minRoad (chi phí nhỏ nhất đến thời điểm hiện tại)
+        if (L.length > 0) {
+            minRoad = parseInt(L[0]?.substring(1));
+        }
+
+        // Lưu thông tin của đỉnh hiện tại vào kết quả
+        result.push({
+            'TT': u,
+            'KE': nextStates.join(","),
+            'k(u,v)': K.join(","), 
+            'h(v)': H.join(","),
+            'g(v)': G.join(","),
+            'f(v)': F.join(","), 
+            'LList1': LList1.join(","),
+            'LList': L.join(",") 
+        });
+    }
+
+    return result; // Trả về danh sách kết quả
+}
+
+
+/// vẽ thêm
+
+let v = "AA14A";
+let vKey = v.split(/(\d+)/)[0]; // Lấy phần chữ cái trước số
+let weight = parseInt(v.split(/(\d+)/)[1]); // Lấy phần số sau chữ cái
+
+console.log(vKey); // "A"
+console.log(weight); // 14
