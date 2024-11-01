@@ -53,7 +53,7 @@ function dfs(doThi, batDau, ketThuc) {
         TTPT: u,
         TTKE: `TTKT-Dung duong di la ${path.join(' -> ')}`, // Đường đi từ đỉnh bắt đầu đến đỉnh kết thúc
         danhSachL: '', // Danh sách các đỉnh còn lại trong L
-        dinhDaDuyet: ''
+        danhSachQ: ''
       });
       break;
     }
@@ -64,11 +64,13 @@ function dfs(doThi, batDau, ketThuc) {
     // Kết hợp L với nextStates, loại bỏ các đỉnh đã được duyệt
     let danhSachL = [...new Set([...remainingL, ...nextStates.filter(v => !visited.has(v))])];
     
+    
+
     result.push({
       TTPT: u,
       TTKE: nextStates.sort().join(', '), // Các đỉnh kề
       danhSachL: danhSachL.join(', '), // Danh sách các đỉnh còn lại trong L
-      dinhDaDuyet:  Array.from(visited).join(', ')
+      danhSachQ:  [...new Set([...Array.from(visited), ...danhSachL])].join(', ')
     });
     
 
@@ -87,7 +89,7 @@ function dfs(doThi, batDau, ketThuc) {
       TTPT: batDau,
       TTKE: `TTKT-Khong tim thay duong di tu ${batDau} den ${ketThuc}`,
       danhSachL: danhSachL.join(', '),
-      dinhDaDuyet: ''
+      danhSachQ: ''
     });
   }
 
@@ -114,6 +116,7 @@ const tableFormat = [
   { name: 'TTPT', alignment: 'left' },
   { name: 'TTKE', alignment: 'left' },
   { name: 'danhSachL', alignment: 'left' },
+  { name: 'danhSachQ', alignment: 'left' },
 ];
 
 // Tạo tiêu đề bảng

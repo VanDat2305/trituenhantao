@@ -1,8 +1,8 @@
-TTPT | TTKE                                   | danhSachL
-A    | B, C, D                                | B, C, D  
-D    | C, F                                   | B, C, F  
-F    | K                                      | B, C, K  
-K    |                                        | B, C     
-C    | E, F                                   | B, E     
-E    | G, K                                   | B, G     
-G    | TTKT-Dung duong di la A -> C -> E -> G |          
+TTPT | TTKE                                   | danhSachL | danhSachQ             
+A    | B, C, D                                | B, C, D   | A, B, C, D            
+D    | C, F                                   | B, C, F   | A, B, C, D, F         
+F    | K                                      | B, C, K   | A, B, C, D, F, K      
+K    |                                        | B, C      | A, B, C, D, F, K      
+C    | E, F                                   | B, E      | A, B, C, D, F, K, E   
+E    | G, K                                   | B, G      | A, B, C, D, F, K, E, G
+G    | TTKT-Dung duong di la A -> C -> E -> G |           |                       
