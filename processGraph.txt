@@ -109,3 +109,51 @@ let weight = parseInt(v.split(/(\d+)/)[1]); // Lấy phần số sau chữ cái
 
 console.log(vKey); // "A"
 console.log(weight); // 14
+
+
+function readFile(inputFile) {
+    const lines = fs.readFileSync(inputFile, 'utf8').replace(/\r/g, ' ').split('\n'); // Đọc tệp và tách thành từng dòng
+    let [start, end] = lines[0].trim().split(' '); // Dòng đầu tiên chứa điểm bắt đầu và kết thúc
+    if (!start || !end) {
+        console.error('Dòng 1 không hợp lệ: Cần nhập điểm bắt đầu và điểm kết thúc.');
+        process.exit(1);
+    }
+    let arraySave = [];
+    arraySave.push({ key: start.charAt(0), value: start.slice(1) });
+
+    const edges = lines.slice(1).map((line) => {
+        const parts = line.trim().split(' ');
+        // Kiểm tra xem dòng có đúng 3 thành phần hay không
+        
+        if (parts.length !== 3) {
+            console.error(`Dòng không hợp lệ: "${line}". Vui lòng kiểm tra lại.`);
+            return null; // Trả về null để bỏ qua dòng này hoặc có thể đưa ra lỗi
+        }
+        
+        let [a, b, C] = parts;
+    
+        // Kiểm tra các điều kiện bổ sung, ví dụ kiểm tra xem trọng số có phải là số không
+        if (isNaN(C)) {
+            console.error(`Trọng số không hợp lệ ở dòng: "${line}". Vui lòng nhập số.`);
+            return null; // Bỏ qua dòng hoặc có thể đưa ra lỗi
+        }
+        
+        if (arraySave.find(item => item.key === a.charAt(0))) {
+            const foundItem = arraySave.find(item => item.key === a.charAt(0));
+            
+            if (foundItem.value != a.slice(1)) {
+                console.error(`Đỉnh ${a.charAt(0)} có trọng khác với đỉnh còn lại Vui lòng kiểm tra dòng: "${line}"`);
+                return null;
+            }
+        }
+        if (!arraySave.find(item => item.key === a.charAt(0))) {
+            arraySave.push({ key: a.charAt(0), value: a.slice(1) });
+        }
+
+
+        // Trả về mảng chứa đỉnh bắt đầu, đỉnh kết thúc và trọng số
+        return [a.charAt(0), b, parseFloat(C)]; // Ép trọng số thành kiểu số
+    }).filter(edge => edge !== null); // Loại bỏ các dòng không hợp lệ
+    
+    return { start, end, edges }; // Trả về đối tượng chứa start, end, và các cạnh edges
+}
